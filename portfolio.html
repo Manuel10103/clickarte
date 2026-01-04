@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio | Clickarte Photography</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <h1>Clickarte Photography</h1>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="sobre-mi.html">Sobre mí</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="portfolio.html" class="active">Portfolio</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="#" id="panelLink" style="display:none;">Panel</a></li>
+        <li><a href="login.html" id="loginLink">Login</a></li>
+        <li><a href="#" id="logoutLink" style="display:none;">Salir</a></li>
+
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-sobre-mi">
+      <div class="overlay">
+        <h2>Portfolio</h2>
+        <p>Una selección de mis trabajos</p>
+      </div>
+    </section>
+
+    <section class="page">
+      <h2>Galería</h2>
+
+      <!-- NEWBORN -->
+      <h3 class="portfolio-title">Newborn</h3>
+      <div class="portfolio-grid">
+        <img class="portfolio-img" src="img/bebe,corazon.jpeg" alt="Newborn 1">
+        <img class="portfolio-img" src="img/bebe.jpeg" alt="Newborn 2">
+        <img class="portfolio-img" src="img/bebe2.jpeg" alt="Newborn 3">
+        <img class="portfolio-img" src="img/bebe3.jpeg" alt="Newborn 4">
+        <img class="portfolio-img" src="img/bebe4.jpeg" alt="Newborn 4">
+        <img class="portfolio-img" src="img/bebe5.jpeg" alt="Newborn 4">
+        <img class="portfolio-img" src="img/bebec.jpeg" alt="Newborn 4">
+        <img class="portfolio-img" src="img/bebee.jpeg" alt="Newborn 4">
+      </div>
+
+      <!-- EMBARAZO -->
+      <h3 class="portfolio-title">Embarazo</h3>
+      <div class="portfolio-grid">
+        <img class="portfolio-img" src="img/embarazo.jpeg" alt="Embarazo 1">
+        <img class="portfolio-img" src="img/embarazo1.jpeg" alt="Embarazo 2">
+        <img class="portfolio-img" src="img/embarazo (2).jpeg" alt="Embarazo 3">
+        <img class="portfolio-img" src="img/embarazo2.jpeg" alt="Embarazo 4">
+        <img class="portfolio-img" src="img/hero6.jpeg" alt="Embarazo 4">
+        <img class="portfolio-img" src="img/madre,hijo.jpeg" alt="Embarazo 4">
+
+      </div>
+
+      <!-- COMUNION -->
+      <h3 class="portfolio-title">Comunion</h3>
+      <div class="portfolio-grid">
+        <img class="portfolio-img" src="img/comunion.jpeg" alt="comunion 1">
+        <img class="portfolio-img" src="img/comunion (2).jpeg" alt="comunion 2">
+        <img class="portfolio-img" src="img/comunion1.jpeg" alt="comunion 3">
+        <img class="portfolio-img" src="img/comunione.jpeg" alt="comunion 4">
+        <img class="portfolio-img" src="img/comunionm.jpeg" alt="comunion 4">
+        <img class="portfolio-img" src="img/hero4.jpeg" alt="comunion 4">
+        <img class="portfolio-img" src="img/hero5.jpeg" alt="comunion 4">
+        <img class="portfolio-img" src="img/hero7.jpeg" alt="comunion 4">
+
+
+      </div>
+
+    </section>
+
+    <!-- Lightbox (para ampliar fotos) -->
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">×</button>
+      <img class="lightbox-img" id="lightboxImg" alt="Foto ampliada">
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© Clickarte Photography</p>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+</body>
+</html>

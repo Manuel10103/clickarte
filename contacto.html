@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contacto | Clickarte Photography</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <h1>Clickarte Photography</h1>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="sobre-mi.html">Sobre mí</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="contacto.html" class="active">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero-sobre-mi">
+      <div class="overlay">
+        <h2>Contacto</h2>
+        <p>Reserva tu sesión o pide información</p>
+      </div>
+    </section>
+
+    <section class="page">
+      <h2>Hablemos</h2>
+
+      <div class="contacto-grid">
+
+        <!-- Columna izquierda: info + whatsapp -->
+        <div class="contacto-info">
+          <h3>Reserva rápida</h3>
+          <p>La forma más rápida de reservar es por WhatsApp.</p>
+
+          <a href="https://wa.me/34687350990?text=Hola%20Jessica%2C%20estoy%20interesad%40%20en%20una%20sesi%C3%B3n%20de%20....%0A%C2%BFMe%20mandas%20informaci%C3%B3n%3F" target="_blank" rel="noopener">
+            Escríbeme por WhatsApp
+        
+          </a>
+
+
+          <div class="contacto-detalles">
+            <div class="detalle">
+              <span class="detalle-titulo">Especialidad</span>
+              <span class="detalle-texto">Newborn · Embarazo · Infantil</span>
+            </div>
+            <div class="detalle">
+              <span class="detalle-titulo">Ubicación</span>
+              <span class="detalle-texto">Almagro / Ciudad Real</span>
+            </div>
+            <div class="detalle">
+              <span class="detalle-titulo">Instagram</span>
+              <span class="detalle-texto">@clickartephotography</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: formulario -->
+        <div class="contacto-form">
+          <h3>Formulario</h3>
+
+          <form id="contactForm">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <textarea id="mensaje" placeholder="Cuéntame qué sesión quieres..." required></textarea>
+
+            <p id="formMessage"></p>
+
+            <button type="submit">Enviar</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© Clickarte Photography</p>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+</body>
+</html>

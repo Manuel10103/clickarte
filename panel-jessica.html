@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Jessica | Clickarte</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header>
+  <nav>
+    <h1>Clickarte Photography</h1>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="sobre-mi.html">Sobre mí</a></li>
+      <li><a href="servicios.html">Servicios</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li><a href="#" id="panelLink" style="display:none;">Panel</a></li>
+      <li><a href="login.html" id="loginLink">Login</a></li>
+      <li><a href="#" id="logoutLink" style="display:none;">Salir</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="hero-sobre-mi">
+    <div class="overlay">
+      <h2>Panel Jessica</h2>
+      <p>Área privada</p>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="admin-top">
+      <p id="jessicaWelcome"></p>
+      <button id="logoutBtn" type="button">Cerrar sesión</button>
+    </div>
+
+    <div class="admin-card">
+      <h3>Acciones rápidas</h3>
+      <ul class="panel-actions">
+        <li>📸 Revisar portfolio</li>
+        <li>📩 Ver mensajes de contacto (si lo añadimos)</li>
+        <li>⚙️ Ajustes del sitio</li>
+      </ul>
+
+      <p id="panelMessage"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© Clickarte Photography</p>
+</footer>
+
+<script src="js/panel.js" defer></script>
+<script src="js/nav.js" defer></script>
+
+</body>
+</html>
