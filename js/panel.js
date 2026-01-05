@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "";
 
 async function getMe() {
   const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });

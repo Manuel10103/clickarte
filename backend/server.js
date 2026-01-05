@@ -10,24 +10,25 @@ const app = express();
 
 /* =========================
    FRONTEND (carpeta raíz)
-   Sirve: /index.html, /sobre-mi.html, etc.
 ========================= */
 app.use(express.static(path.join(__dirname, "..")));
 
 /* =========================
-   CORS (para Live Server + backend con session cookie)
+   CORS
+   - Local: Live Server
+   - Prod: tu dominio de Render
 ========================= */
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:5500",
   "http://127.0.0.1:3000",
   "http://localhost:3000",
-];
+  process.env.FRONTEND_URL, // <-- pon aquí tu URL de Render (env)
+].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Permite llamadas sin origin (Postman, etc.)
       if (!origin) return cb(null, true);
       if (allowedOrigins.includes(origin)) return cb(null, true);
       return cb(new Error("Not allowed by CORS: " + origin));
@@ -41,26 +42,25 @@ app.use(express.json());
 /* =========================
    SESSION
 ========================= */
+app.set("trust proxy", 1); // IMPORTANTE en Render (proxy)
+
 app.use(
   session({
-    secret: "clickarte_secret_dev",
+    secret: process.env.SESSION_SECRET || "clickarte_secret_dev",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: "lax", // en local va bien
-      // secure: true, // solo cuando estés en https en producción
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production", // en Render será https
     },
   })
 );
 
 /* =========================
    MONGO (LOCAL o ATLAS)
-   - Si pones MONGO_URI en .env, usará Atlas.
-   - Si no, usa local.
 ========================= */
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/clickarte";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/clickarte";
 
 mongoose
   .connect(MONGO_URI)
@@ -68,13 +68,13 @@ mongoose
   .catch((e) => console.error("❌ Error Mongo:", e.message));
 
 /* =========================
-   MODELO USER (con createdAt/updatedAt)
+   MODELO USER (timestamps)
 ========================= */
 const userSchema = new mongoose.Schema(
   {
     nombre: { type: String, required: true },
     email: { type: String, unique: true, lowercase: true, trim: true, required: true },
-    password: { type: String, required: true }, // ⚠️ sin hash (prácticas)
+    password: { type: String, required: true },
     role: { type: String, enum: ["USER", "ADMIN", "JESSICA"], default: "USER" },
   },
   { collection: "users", timestamps: true }
@@ -85,16 +85,10 @@ const User = mongoose.model("User", userSchema);
 /* =========================
    HELPERS AUTH / ROLES
 ========================= */
-function requireAuth(req, res, next) {
-  if (!req.session.user) return res.status(401).json({ error: "No autorizado" });
-  next();
-}
-
 function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.session.user) return res.status(401).json({ error: "No autorizado" });
-    if (!roles.includes(req.session.user.role))
-      return res.status(403).json({ error: "No tienes permisos" });
+    if (!roles.includes(req.session.user.role)) return res.status(403).json({ error: "No tienes permisos" });
     next();
   };
 }
@@ -109,7 +103,6 @@ app.get("/", (req, res) => {
 /* =========================
    AUTH
 ========================= */
-// LOGIN
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -127,18 +120,15 @@ app.post("/api/auth/login", async (req, res) => {
     };
 
     return res.json({ ok: true, user: req.session.user });
-  } catch (e) {
+  } catch {
     return res.status(500).json({ error: "Error interno" });
   }
 });
 
-// REGISTER (crea USER)
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ error: "Faltan campos" });
-    }
+    if (!nombre || !email || !password) return res.status(400).json({ error: "Faltan campos" });
 
     await User.create({
       nombre,
@@ -149,19 +139,15 @@ app.post("/api/auth/register", async (req, res) => {
 
     return res.json({ ok: true });
   } catch (e) {
-    if (String(e).includes("E11000")) {
-      return res.status(409).json({ error: "Ese email ya existe" });
-    }
+    if (String(e).includes("E11000")) return res.status(409).json({ error: "Ese email ya existe" });
     return res.status(500).json({ error: "Error interno" });
   }
 });
 
-// QUIÉN SOY
 app.get("/api/me", (req, res) => {
   res.json({ user: req.session.user || null });
 });
 
-// LOGOUT
 app.post("/api/auth/logout", (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
@@ -169,18 +155,17 @@ app.post("/api/auth/logout", (req, res) => {
 /* =========================
    ADMIN / PANEL
 ========================= */
-// ADMIN: ver usuarios (sin password)
 app.get("/api/admin/users", requireRole("ADMIN"), async (req, res) => {
   const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
   res.json({ users });
 });
 
-// Panel Jessica (o Admin)
 app.get("/api/panel", requireRole("JESSICA", "ADMIN"), (req, res) => {
   res.json({ ok: true, msg: "Panel autorizado" });
 });
 
 /* =========================
-   START
+   START (Render usa PORT)
 ========================= */
-app.listen(3000, () => console.log("🚀 Backend: http://localhost:3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("🚀 Backend en puerto:", PORT));
