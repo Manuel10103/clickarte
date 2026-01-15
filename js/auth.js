@@ -1,4 +1,3 @@
-const API_BASE = "";
 
 // Helper para mensajes sin alerts
 function showMsg(el, text, type) {

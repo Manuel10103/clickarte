@@ -1,4 +1,3 @@
-const API_BASE = "";
 
 async function getMe() {
   try {
