@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(`${window.API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -42,11 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
       // Redirección según rol
       const role = data?.user?.role;
       if (role === "ADMIN") {
-        window.location.href = "/admin.html";
+        window.location.href = "admin.html";
       } else if (role === "JESSICA") {
-        window.location.href = "/panel-jessica.html";
+        window.location.href = "panel-jessica.html";
       } else {
-        window.location.href = "/index.html";
+        window.location.href = "index.html";
       }
     } catch (err) {
       console.error(err);

@@ -1,7 +1,6 @@
-
 async function getMe() {
   try {
-    const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });
+    const res = await fetch(`${window.API_BASE}/api/me`, { credentials: "include" });
     const data = await res.json();
     return data.user || null;
   } catch {
@@ -20,9 +19,12 @@ async function getMe() {
     // Mostrar Panel y Salir
     if (panelLink) {
       panelLink.style.display = "inline";
-      panelLink.href = user.role === "ADMIN"
-        ? "admin.html"
-        : (user.role === "JESSICA" ? "panel-jessica.html" : "index.html");
+      panelLink.href =
+        user.role === "ADMIN"
+          ? "admin.html"
+          : user.role === "JESSICA"
+          ? "panel-jessica.html"
+          : "index.html";
     }
     if (logoutLink) logoutLink.style.display = "inline";
     if (loginLink) loginLink.style.display = "none";
@@ -37,7 +39,7 @@ async function getMe() {
   if (logoutLink) {
     logoutLink.addEventListener("click", async (e) => {
       e.preventDefault();
-      await fetch(`${API_BASE}/api/auth/logout`, {
+      await fetch(`${window.API_BASE}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

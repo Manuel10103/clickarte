@@ -1,5 +1,5 @@
-
 function showMsg(el, text, type) {
+  if (!el) return;
   el.className = "";
   el.style.display = "block";
   el.textContent = text;
@@ -7,9 +7,9 @@ function showMsg(el, text, type) {
 }
 
 async function getMe() {
-  const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });
-  const data = await res.json();
-  return data.user;
+  const res = await fetch(`${window.API_BASE}/api/me`, { credentials: "include" });
+  const data = await res.json().catch(() => ({}));
+  return data.user || null;
 }
 
 async function loadUsers() {
@@ -17,16 +17,18 @@ async function loadUsers() {
   const msg = document.getElementById("adminMessage");
 
   try {
-    const res = await fetch(`${API_BASE}/api/admin/users`, { credentials: "include" });
-    const data = await res.json();
+    const res = await fetch(`${window.API_BASE}/api/admin/users`, { credentials: "include" });
+    const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
       showMsg(msg, data.error || "No autorizado.", "error");
       return;
     }
 
+    if (!tbody) return;
     tbody.innerHTML = "";
-    data.users.forEach(u => {
+
+    (data.users || []).forEach((u) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${u.nombre || "-"}</td>
@@ -35,16 +37,21 @@ async function loadUsers() {
       `;
       tbody.appendChild(tr);
     });
-
   } catch (e) {
     showMsg(msg, "No se pudo cargar la lista de usuarios.", "error");
   }
 }
 
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await fetch(`${API_BASE}/api/auth/logout`, { method: "POST", credentials: "include" });
-  window.location.href = "login.html";
-});
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await fetch(`${window.API_BASE}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+    window.location.href = "login.html";
+  });
+}
 
 (async () => {
   const user = await getMe();
@@ -52,6 +59,8 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   if (!user) return (window.location.href = "login.html");
   if (user.role !== "ADMIN") return (window.location.href = "index.html");
 
-  document.getElementById("adminWelcome").textContent = `Hola, ${user.nombre} (ADMIN)`;
+  const welcome = document.getElementById("adminWelcome");
+  if (welcome) welcome.textContent = `Hola, ${user.nombre} (ADMIN)`;
+
   loadUsers();
 })();

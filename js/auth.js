@@ -1,4 +1,3 @@
-
 // Helper para mensajes sin alerts
 function showMsg(el, text, type) {
   if (!el) return;
@@ -24,14 +23,14 @@ if (loginForm) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      const res = await fetch(`${window.API_BASE}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         showMsg(msg, data.error || "Error al iniciar sesión.", "error");
@@ -71,13 +70,14 @@ if (registerForm) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
+      const res = await fetch(`${window.API_BASE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ nombre, email, password }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         showMsg(msg, data.error || "Error al registrarte.", "error");
