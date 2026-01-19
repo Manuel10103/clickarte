@@ -14,30 +14,40 @@ const app = express();
 app.use(express.static(path.join(__dirname, "..")));
 
 /* =========================
+   BODY PARSERS
+========================= */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* =========================
    CORS
    - Local: Live Server
-   - Prod: tu dominio de Render
+   - Prod: Render (y/o tu FRONTEND_URL)
 ========================= */
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:5500",
   "http://127.0.0.1:3000",
   "http://localhost:3000",
-  process.env.FRONTEND_URL, // <-- pon aquí tu URL de Render (env)
+  "https://clickarte.onrender.com",
+  process.env.FRONTEND_URL, // si tu frontend está en Vercel, pon aquí esa URL exacta
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, cb) => {
+      // requests sin Origin (Postman/Server-to-server)
       if (!origin) return cb(null, true);
+
       if (allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error("Not allowed by CORS: " + origin));
+
+      // En vez de lanzar Error (que puede acabar como 500),
+      // devolvemos "false" y el navegador bloqueará por CORS sin petar el servidor.
+      return cb(null, false);
     },
     credentials: true,
   })
 );
-
-app.use(express.json());
 
 /* =========================
    SESSION
@@ -46,13 +56,23 @@ app.set("trust proxy", 1); // IMPORTANTE en Render (proxy)
 
 app.use(
   session({
+    name: "clickarte.sid",
     secret: process.env.SESSION_SECRET || "clickarte_secret_dev",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
+      // Si TODO va en el mismo dominio (clickarte.onrender.com) -> "lax" OK
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production", // en Render será https
+
+      // Si tu frontend está en OTRO dominio (ej Vercel) y quieres cookies cross-site:
+      // sameSite: "none",
+
+      // En producción en Render es https, así que secure debe ser true
+      secure: process.env.NODE_ENV === "production",
+
+      // Opcional
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días
     },
   })
 );
@@ -107,8 +127,16 @@ app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email?.toLowerCase().trim() });
-    if (!user || user.password !== password) {
+    const cleanEmail = String(email || "").toLowerCase().trim();
+    const cleanPassword = String(password || "");
+
+    if (!cleanEmail || !cleanPassword) {
+      return res.status(400).json({ error: "Faltan credenciales" });
+    }
+
+    const user = await User.findOne({ email: cleanEmail });
+
+    if (!user || user.password !== cleanPassword) {
       return res.status(401).json({ error: "Credenciales incorrectas" });
     }
 
@@ -120,7 +148,8 @@ app.post("/api/auth/login", async (req, res) => {
     };
 
     return res.json({ ok: true, user: req.session.user });
-  } catch {
+  } catch (e) {
+    console.error("❌ LOGIN ERROR:", e);
     return res.status(500).json({ error: "Error interno" });
   }
 });
@@ -128,17 +157,24 @@ app.post("/api/auth/login", async (req, res) => {
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
-    if (!nombre || !email || !password) return res.status(400).json({ error: "Faltan campos" });
+    const cleanNombre = String(nombre || "").trim();
+    const cleanEmail = String(email || "").toLowerCase().trim();
+    const cleanPassword = String(password || "");
+
+    if (!cleanNombre || !cleanEmail || !cleanPassword) {
+      return res.status(400).json({ error: "Faltan campos" });
+    }
 
     await User.create({
-      nombre,
-      email: email.toLowerCase().trim(),
-      password,
+      nombre: cleanNombre,
+      email: cleanEmail,
+      password: cleanPassword,
       role: "USER",
     });
 
     return res.json({ ok: true });
   } catch (e) {
+    console.error("❌ REGISTER ERROR:", e);
     if (String(e).includes("E11000")) return res.status(409).json({ error: "Ese email ya existe" });
     return res.status(500).json({ error: "Error interno" });
   }
@@ -162,6 +198,14 @@ app.get("/api/admin/users", requireRole("ADMIN"), async (req, res) => {
 
 app.get("/api/panel", requireRole("JESSICA", "ADMIN"), (req, res) => {
   res.json({ ok: true, msg: "Panel autorizado" });
+});
+
+/* =========================
+   ERROR HANDLER (para ver motivos reales en logs)
+========================= */
+app.use((err, req, res, next) => {
+  console.error("❌ SERVER ERROR:", err);
+  res.status(500).json({ error: err.message || "Error interno" });
 });
 
 /* =========================
