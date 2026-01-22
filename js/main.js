@@ -1,3 +1,61 @@
+// ========= SETTINGS -> CONTACTO =========
+async function loadSiteSettingsIntoContact() {
+  // Solo ejecutar si estamos en contacto.html (porque existe el form)
+  const contactForm = document.getElementById("contactForm");
+  if (!contactForm) return;
+
+  try {
+    const res = await fetch(`${window.API_BASE}/api/settings`);
+    const data = await res.json().catch(() => ({}));
+    const s = data.settings || null;
+
+    if (!s) return; // si aún no hay settings guardados, no pasa nada
+
+    // Especialidades
+    const esp = document.getElementById("contactEspecialidades");
+    if (esp && s.especialidades) esp.textContent = s.especialidades;
+
+    // Ubicación
+    const ubi = document.getElementById("contactUbicacion");
+    if (ubi && s.ubicacion) ubi.textContent = s.ubicacion;
+
+    // Instagram
+    const ig = document.getElementById("contactInstagram");
+    if (ig && s.instagram) ig.textContent = s.instagram.startsWith("@") ? s.instagram : `@${s.instagram}`;
+
+    // Link de WhatsApp
+    const wa = document.getElementById("whatsappLink");
+    if (wa) {
+      const tel = String(s.telefonoWhatsApp || "").replace(/\s+/g, "");
+      if (tel) {
+        const texto = encodeURIComponent(
+          "Hola Jessica, estoy interesad@ en una sesión de ....\n¿Me mandas información?"
+        );
+        wa.href = `https://wa.me/${tel}?text=${texto}`;
+      } else {
+        wa.href = "#";
+      }
+    }
+
+    // Aviso web (opcional)
+    const aviso = document.getElementById("contactAviso");
+    if (aviso) {
+      if (s.avisoWeb) {
+        aviso.style.display = "block";
+        aviso.textContent = s.avisoWeb;
+      } else {
+        aviso.style.display = "none";
+        aviso.textContent = "";
+      }
+    }
+  } catch (e) {
+    console.warn("No se pudieron cargar los settings:", e);
+  }
+}
+
+loadSiteSettingsIntoContact();
+
+
 const form = document.getElementById("contactForm");
 const message = document.getElementById("formMessage");
 

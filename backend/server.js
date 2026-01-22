@@ -271,9 +271,6 @@ app.put("/api/settings", requireRole("JESSICA", "ADMIN"), async (req, res) => {
     return res.status(500).json({ error: "Error interno" });
   }
 });
-
-
-
 /*
    ADMIN PANEL
 */

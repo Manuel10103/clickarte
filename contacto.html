@@ -34,6 +34,9 @@
     <section class="page">
       <h2>Hablemos</h2>
 
+      <!-- ✅ Aviso dinámico (si lo pones en Ajustes del sitio) -->
+      <p id="contactAviso" style="display:none;"></p>
+
       <div class="contacto-grid">
 
         <!-- Columna izquierda: info + whatsapp -->
@@ -41,24 +44,23 @@
           <h3>Reserva rápida</h3>
           <p>La forma más rápida de reservar es por WhatsApp.</p>
 
-          <a href="https://wa.me/34687350990?text=Hola%20Jessica%2C%20estoy%20interesad%40%20en%20una%20sesi%C3%B3n%20de%20....%0A%C2%BFMe%20mandas%20informaci%C3%B3n%3F" target="_blank" rel="noopener">
+          <!-- ✅ Este link lo rellenará main.js con /api/settings -->
+          <a id="whatsappLink" href="#" target="_blank" rel="noopener">
             Escríbeme por WhatsApp
-        
           </a>
-
 
           <div class="contacto-detalles">
             <div class="detalle">
               <span class="detalle-titulo">Especialidad</span>
-              <span class="detalle-texto">Newborn · Embarazo · Infantil</span>
+              <span class="detalle-texto" id="contactEspecialidades">Newborn · Embarazo · Infantil</span>
             </div>
             <div class="detalle">
               <span class="detalle-titulo">Ubicación</span>
-              <span class="detalle-texto">Almagro / Ciudad Real</span>
+              <span class="detalle-texto" id="contactUbicacion">Almagro / Ciudad Real</span>
             </div>
             <div class="detalle">
               <span class="detalle-titulo">Instagram</span>
-              <span class="detalle-texto">@clickartephotography</span>
+              <span class="detalle-texto" id="contactInstagram">@clickartephotography</span>
             </div>
           </div>
         </div>
@@ -85,8 +87,9 @@
   <footer>
     <p>© Clickarte Photography</p>
   </footer>
+
   <script src="js/config.js" defer></script> 
-    <script src="js/nav.js" defer></script>
+  <script src="js/nav.js" defer></script>
   <script src="js/main.js" defer></script>
 
 </body>
