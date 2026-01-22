@@ -8,51 +8,39 @@ require("dotenv").config();
 
 const app = express();
 
-/* =========================
-   FRONTEND (carpeta raíz)
-========================= */
+
 app.use(express.static(path.join(__dirname, "..")));
 
-/* =========================
-   BODY PARSERS
-========================= */
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* =========================
-   CORS
-   - Local: Live Server
-   - Prod: Render (y/o tu FRONTEND_URL)
-========================= */
+
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:5500",
   "http://127.0.0.1:3000",
   "http://localhost:3000",
   "https://clickarte.onrender.com",
-  process.env.FRONTEND_URL, // si tu frontend está en Vercel, pon aquí esa URL exacta
+  process.env.FRONTEND_URL, // url de verdell
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, cb) => {
-      // requests sin Origin (Postman/Server-to-server)
       if (!origin) return cb(null, true);
 
       if (allowedOrigins.includes(origin)) return cb(null, true);
-
-      // En vez de lanzar Error (que puede acabar como 500),
-      // devolvemos "false" y el navegador bloqueará por CORS sin petar el servidor.
       return cb(null, false);
     },
     credentials: true,
   })
 );
 
-/* =========================
-   SESSION
-========================= */
-app.set("trust proxy", 1); // IMPORTANTE en Render (proxy)
+/* 
+   SESION
+ */
+app.set("trust proxy", 1); 
 
 app.use(
   session({
@@ -62,24 +50,17 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      // Si TODO va en el mismo dominio (clickarte.onrender.com) -> "lax" OK
       sameSite: "lax",
-
-      // Si tu frontend está en OTRO dominio (ej Vercel) y quieres cookies cross-site:
-      // sameSite: "none",
-
-      // En producción en Render es https, así que secure debe ser true
       secure: process.env.NODE_ENV === "production",
-
       // Opcional
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días
     },
   })
 );
 
-/* =========================
+/*
    MONGO (LOCAL o ATLAS)
-========================= */
+*/
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/clickarte";
 
 mongoose
@@ -87,9 +68,9 @@ mongoose
   .then(() => console.log("✅ Mongo conectado"))
   .catch((e) => console.error("❌ Error Mongo:", e.message));
 
-/* =========================
+/* 
    MODELO USER (timestamps)
-========================= */
+*/
 const userSchema = new mongoose.Schema(
   {
     nombre: { type: String, required: true },
@@ -102,9 +83,24 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model("User", userSchema);
 
-/* =========================
-   HELPERS AUTH / ROLES
-========================= */
+
+
+/* MODELO MENSAJES CONTACTO */
+const messageSchema = new mongoose.Schema(
+  {
+    nombre: { type: String, required: true, trim: true },
+    email: { type: String, required: true, lowercase: true, trim: true },
+    mensaje: { type: String, required: true, trim: true },
+    leido: { type: Boolean, default: false },
+  },
+  { collection: "messages", timestamps: true }
+);
+
+const Message = mongoose.model("Message", messageSchema);
+
+
+
+/* HELPERS AUTH / ROLES */
 function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.session.user) return res.status(401).json({ error: "No autorizado" });
@@ -113,16 +109,16 @@ function requireRole(...roles) {
   };
 }
 
-/* =========================
-   RUTA DEFAULT
-========================= */
+/* 
+   RUTA DEFAULT*/
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "index.html"));
 });
 
-/* =========================
+/*
    AUTH
-========================= */
+*/
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -174,7 +170,7 @@ app.post("/api/auth/register", async (req, res) => {
 
     return res.json({ ok: true });
   } catch (e) {
-    console.error("❌ REGISTER ERROR:", e);
+    console.error(" REGISTER ERROR:", e);
     if (String(e).includes("E11000")) return res.status(409).json({ error: "Ese email ya existe" });
     return res.status(500).json({ error: "Error interno" });
   }
@@ -188,9 +184,48 @@ app.post("/api/auth/logout", (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
-/* =========================
-   ADMIN / PANEL
-========================= */
+
+/*
+   CONTACTO (guardar mensaje)
+   - Público: cualquiera puede enviar
+*/
+app.post("/api/contact", async (req, res) => {
+  try {
+    const nombre = String(req.body.nombre || "").trim();
+    const email = String(req.body.email || "").toLowerCase().trim();
+    const mensaje = String(req.body.mensaje || "").trim();
+
+    if (!nombre || !email || !mensaje) {
+      return res.status(400).json({ error: "Faltan campos" });
+    }
+
+    await Message.create({ nombre, email, mensaje });
+
+    return res.json({ ok: true });
+  } catch (e) {
+    console.error("❌ CONTACT ERROR:", e);
+    return res.status(500).json({ error: "Error interno" });
+  }
+});
+
+/*
+   MENSAJES (leer mensajes para Jessica/Admin)
+*/
+app.get("/api/messages", requireRole("JESSICA", "ADMIN"), async (req, res) => {
+  try {
+    const messages = await Message.find({}).sort({ createdAt: -1 });
+    return res.json({ messages });
+  } catch (e) {
+    console.error("❌ MESSAGES ERROR:", e);
+    return res.status(500).json({ error: "Error interno" });
+  }
+});
+
+
+
+/*
+   ADMIN PANEL
+*/
 app.get("/api/admin/users", requireRole("ADMIN"), async (req, res) => {
   const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
   res.json({ users });
@@ -200,16 +235,14 @@ app.get("/api/panel", requireRole("JESSICA", "ADMIN"), (req, res) => {
   res.json({ ok: true, msg: "Panel autorizado" });
 });
 
-/* =========================
-   ERROR HANDLER (para ver motivos reales en logs)
-========================= */
+/* 
+   ERROR 
+*/
 app.use((err, req, res, next) => {
-  console.error("❌ SERVER ERROR:", err);
+  console.error(" SERVER ERROR:", err);
   res.status(500).json({ error: err.message || "Error interno" });
 });
 
-/* =========================
-   START (Render usa PORT)
-========================= */
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("🚀 Backend en puerto:", PORT));

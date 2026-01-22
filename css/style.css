@@ -1,6 +1,6 @@
-/* =========================
-   VARIABLES + RESET
-========================= */
+/* 
+   VARIABLES
+ */
 :root{
   --marron: #4a3b2a;
   --marron-2: #6b5a45;
@@ -24,7 +24,7 @@ body{
   line-height: 1.6;
 }
 
-/* Contenedor general */
+/* Contenedor general*/
 main{
   max-width: 1200px;
   margin: 0 auto;
@@ -40,9 +40,8 @@ p{
   color: var(--marron-2);
 }
 
-/* =========================
-   HEADER / NAV
-========================= */
+/* 
+   HEADER / NAV */
 header{
   position: sticky;
   top: 0;
@@ -83,7 +82,7 @@ nav a{
   padding-bottom: 6px;
 }
 
-/* subrayado elegante */
+/* subrayado  */
 nav a::after{
   content: "";
   position: absolute;
@@ -97,10 +96,9 @@ nav a::after{
 
 nav a:hover::after{ width: 100%; }
 
-/* link activo */
 nav a.active::after{ width: 100%; }
 
-/* Responsive nav (simple) */
+/* Responsive */
 @media (max-width: 720px){
   nav{
     flex-direction: column;
@@ -113,9 +111,9 @@ nav a.active::after{ width: 100%; }
   }
 }
 
-/* =========================
+/* 
    SECCIONES BASE
-========================= */
+ */
 .section{
   padding: 90px 20px;
 }
@@ -132,10 +130,9 @@ nav a.active::after{ width: 100%; }
   font-size: 32px;
 }
 
-/* =========================
+/* 
    HERO INDEX (CON CARRUSEL)
-   (ya NO usa hero.jpg directo)
-========================= */
+ */
 .hero-index{
   height: 92vh;
   position: relative;
@@ -154,7 +151,7 @@ nav a.active::after{ width: 100%; }
 .carousel-track{
   height: 100%;
   display: flex;
-  transition: transform 1.2s ease; /* más suave */
+  transition: transform 1.2s ease; 
 }
 
 .carousel-track img{
@@ -171,10 +168,9 @@ nav a.active::after{ width: 100%; }
   inset: 0;
   background: rgba(74,59,42,0.45);
   z-index: 1;
-  pointer-events: none; /* para que se pueda clicar */
+  pointer-events: none; 
 }
 
-/* Texto por encima */
 .hero-content{
   position: relative;
   z-index: 2;
@@ -218,7 +214,7 @@ nav a.active::after{ width: 100%; }
   font-size: 26px;
   line-height: 1;
   display: grid;
-  place-items: center;
+  place-items: center; 
   transition: background .25s ease, transform .25s ease;
 }
 
@@ -230,7 +226,6 @@ nav a.active::after{ width: 100%; }
 .carousel-btn.prev{ left: 18px; }
 .carousel-btn.next{ right: 18px; }
 
-/* Dots */
 .carousel-dots{
   position: absolute;
   left: 50%;
@@ -258,14 +253,14 @@ nav a.active::after{ width: 100%; }
 
 /* Responsive hero */
 @media (max-width: 720px){
-  .hero-content h2{ font-size: 32px; }
+  .hero-content  h2{ font-size: 32px; }
   .hero-content p{ font-size: 16px; }
   .carousel-btn{ width: 38px; height: 38px; font-size: 22px; }
 }
 
-/* =========================
-   PORTFOLIO (si lo usas)
-========================= */
+/* 
+   PORTFOLIO
+ */
 .galeria{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -273,7 +268,6 @@ nav a.active::after{ width: 100%; }
   margin: 25px 0 55px;
 }
 
-/* Placeholder mientras no metas imágenes */
 .galeria::before{
   content: "Añade aquí tus imágenes";
   background-color: var(--gris);
@@ -287,9 +281,9 @@ nav a.active::after{ width: 100%; }
   grid-column: 1 / -1;
 }
 
-/* =========================
+/* 
    SERVICIOS (si lo usas)
-========================= */
+ */
 .servicios-list{
   display: flex;
   gap: 35px;
@@ -303,9 +297,9 @@ nav a.active::after{ width: 100%; }
   padding-left: 15px;
 }
 
-/* =========================
+/* 
    FORMULARIO + MENSAJE
-========================= */
+ */
 form{
   max-width: 520px;
   display: flex;
@@ -350,9 +344,9 @@ button:hover{
 #formMessage.error{ color: #b00020; }
 #formMessage.success{ color: #2f8f4a; }
 
-/* =========================
+/* 
    SOBRE MÍ - HERO + CONTENIDO
-========================= */
+ */
 .hero-sobre-mi{
   height: 55vh;
   background: linear-gradient(270deg, #f5e6d3, #ffffff, #f0e4d8);
@@ -368,7 +362,7 @@ button:hover{
 
 .hero-sobre-mi .overlay{
   background: rgba(255,255,255,0.65);
-  padding: 28px 22px;
+  padding: 28px 22px; 
   border-radius: 12px;
   border: 1px solid rgba(212,175,55,0.35);
   animation: fadeUp 1s ease both;
@@ -411,7 +405,6 @@ button:hover{
   color: var(--marron);
   letter-spacing: 1px;
 }
-
 .sobre-mi-imagen{
   flex: 1;
   text-align: center;
@@ -423,7 +416,6 @@ button:hover{
   border: 1px solid var(--borde);
 }
 
-/* Bloque “datos” (lo que me pediste antes) */
 .sobre-mi-datos{
   margin-top: 18px;
   display: grid;
@@ -449,9 +441,9 @@ button:hover{
   color: var(--marron);
 }
 
-/* =========================
+/* 
    FOOTER
-========================= */
+ */
 footer{
   text-align: center;
   padding: 22px 16px;
@@ -459,22 +451,21 @@ footer{
   font-size: 14px;
   color: var(--marron-2);
 }
-/* =========================
+/* 
    SERVICIOS - TARJETAS
-========================= */
+ */
 .servicios-grid{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
   margin-top: 30px;
 }
-
 .servicio-card{
   background: #fff;
   border: 1px solid var(--borde);
   border-radius: 14px;
   padding: 22px 18px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.04); 
   transition: transform .25s ease, border-color .25s ease;
 }
 
@@ -510,9 +501,8 @@ footer{
 @media (max-width: 900px){
   .servicios-grid{ grid-template-columns: 1fr; }
 }
-/* =========================
-   PORTFOLIO - GRID
-========================= */
+/* 
+   PORTFOLIO  */
 .portfolio-title{
   margin-top: 35px;
   margin-bottom: 16px;
@@ -541,9 +531,9 @@ footer{
   border-color: rgba(212,175,55,0.45);
 }
 
-/* =========================
+/* 
    LIGHTBOX
-========================= */
+ */
 .lightbox{
   position: fixed;
   inset: 0;
@@ -580,9 +570,9 @@ footer{
   font-size: 28px;
   line-height: 1;
 }
-/* =========================
+/* 
    CONTACTO
-========================= */
+ */
 .contacto-grid{
   display: grid;
   grid-template-columns: 1fr 1fr;

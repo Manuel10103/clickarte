@@ -4,10 +4,10 @@ function showMsg(el, text, type) {
   el.className = "";
   el.style.display = "block";
   el.textContent = text;
-  el.classList.add(type); // "error" o "success"
+  el.classList.add(type);
 }
 
-// ========= LOGIN =========
+// LOGIN 
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
@@ -53,7 +53,7 @@ if (loginForm) {
   });
 }
 
-// ========= REGISTER =========
+//  REGISTRO
 const registerForm = document.getElementById("registerForm");
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {

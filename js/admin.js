@@ -3,7 +3,7 @@ function showMsg(el, text, type) {
   el.className = "";
   el.style.display = "block";
   el.textContent = text;
-  el.classList.add(type); // error/success
+  el.classList.add(type); 
 }
 
 async function getMe() {

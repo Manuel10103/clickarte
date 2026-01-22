@@ -2,7 +2,7 @@ const form = document.getElementById("contactForm");
 const message = document.getElementById("formMessage");
 
 if (form && message) {
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const nombre = document.getElementById("nombre")?.value.trim();
@@ -18,12 +18,32 @@ if (form && message) {
       return;
     }
 
-    message.textContent = "Mensaje enviado correctamente.";
-    message.classList.add("success");
+    try {
+      const res = await fetch(`${window.API_BASE}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, mensaje: texto }),
+      });
 
-    form.reset();
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        message.textContent = data.error || "No se pudo enviar el mensaje.";
+        message.classList.add("error");
+        return;
+      }
+
+      message.textContent = "Mensaje enviado correctamente.";
+      message.classList.add("success");
+      form.reset();
+    } catch (err) {
+      console.error(err);
+      message.textContent = "No se pudo conectar con el servidor.";
+      message.classList.add("error");
+    }
   });
 }
+
 
 const track = document.querySelector(".carousel-track");
 const prevBtn = document.querySelector(".carousel-btn.prev");
@@ -78,7 +98,7 @@ if (track && prevBtn && nextBtn && dotsContainer && carousel) {
     startAuto();
   }
 
-  // Init
+
   if (slides.length > 0) {
     buildDots();
     updateCarousel();
@@ -92,7 +112,6 @@ if (track && prevBtn && nextBtn && dotsContainer && carousel) {
     carousel.addEventListener("mouseleave", startAuto);
   }
 }
-// ========= Lightbox Portfolio =========
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightboxImg");
 const lightboxClose = document.getElementById("lightboxClose");

@@ -35,7 +35,6 @@ async function getMe() {
     if (logoutLink) logoutLink.style.display = "none";
   }
 
-  // Logout
   if (logoutLink) {
     logoutLink.addEventListener("click", async (e) => {
       e.preventDefault();
