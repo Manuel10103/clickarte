@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ajustes | Clickarte</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header>
+  <nav>
+    <h1>Clickarte Photography</h1>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="panel-jessica.html" class="active">Panel</a></li>
+      <li><a href="#" id="logoutLink" style="display:none;">Salir</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="page">
+    <h2>Ajustes del sitio</h2>
+    <p id="settingsMsg"></p>
+
+    <div class="admin-card">
+      <form id="settingsForm">
+        <input type="text" id="telefonoWhatsApp" placeholder="Teléfono WhatsApp (ej: 34687350990)">
+        <input type="text" id="instagram" placeholder="Instagram (sin @)">
+        <input type="text" id="ubicacion" placeholder="Ubicación (ej: Almagro / Ciudad Real)">
+        <input type="text" id="especialidades" placeholder="Especialidades (ej: Newborn · Embarazo · Infantil)">
+        <input type="email" id="emailContacto" placeholder="Email de contacto">
+        <textarea id="avisoWeb" placeholder="Aviso web (opcional)"></textarea>
+
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  <p>© Clickarte Photography</p>
+</footer>
+
+<script src="js/config.js" defer></script>
+<script src="js/ajustes.js" defer></script>
+</body>
+</html>

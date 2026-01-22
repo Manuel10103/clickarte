@@ -222,6 +222,57 @@ app.get("/api/messages", requireRole("JESSICA", "ADMIN"), async (req, res) => {
 });
 
 
+/* MODELO SETTINGS (ajustes del sitio)- Un único documento */
+const settingsSchema = new mongoose.Schema(
+  {
+    telefonoWhatsApp: { type: String, default: "" }, // ejemplo: 34687350990
+    instagram: { type: String, default: "" },        // ejemplo: clickartephotography
+    ubicacion: { type: String, default: "" },        // "Almagro / Ciudad Real"
+    especialidades: { type: String, default: "" },   // "Newborn · Embarazo · Infantil"
+    emailContacto: { type: String, default: "" },    // email visible en la web
+    avisoWeb: { type: String, default: "" },         // texto opcional tipo “Agenda completa…”
+  },
+  { collection: "settings", timestamps: true }
+);
+
+const Settings = mongoose.model("Settings", settingsSchema);
+
+
+app.get("/api/settings", async (req, res) => {
+  try {
+    const settings = await Settings.findOne({});
+    return res.json({ settings: settings || null });
+  } catch (e) {
+    console.error("❌ SETTINGS GET ERROR:", e);
+    return res.status(500).json({ error: "Error interno" });
+  }
+});
+
+app.put("/api/settings", requireRole("JESSICA", "ADMIN"), async (req, res) => {
+  try {
+    const payload = {
+      telefonoWhatsApp: String(req.body.telefonoWhatsApp || "").trim(),
+      instagram: String(req.body.instagram || "").trim(),
+      ubicacion: String(req.body.ubicacion || "").trim(),
+      especialidades: String(req.body.especialidades || "").trim(),
+      emailContacto: String(req.body.emailContacto || "").trim(),
+      avisoWeb: String(req.body.avisoWeb || "").trim(),
+    };
+
+    const settings = await Settings.findOneAndUpdate(
+      {},
+      { $set: payload },
+      { new: true, upsert: true }
+    );
+
+    return res.json({ ok: true, settings });
+  } catch (e) {
+    console.error("❌ SETTINGS PUT ERROR:", e);
+    return res.status(500).json({ error: "Error interno" });
+  }
+});
+
+
 
 /*
    ADMIN PANEL
