@@ -37,9 +37,7 @@ app.use(
   })
 );
 
-/* 
-   SESION
- */
+/*SESION*/
 app.set("trust proxy", 1); 
 
 app.use(
@@ -58,9 +56,7 @@ app.use(
   })
 );
 
-/*
-   MONGO (LOCAL o ATLAS)
-*/
+/* MONGO (LOCAL o ATLAS) */
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/clickarte";
 
 mongoose
@@ -68,9 +64,7 @@ mongoose
   .then(() => console.log("✅ Mongo conectado"))
   .catch((e) => console.error("❌ Error Mongo:", e.message));
 
-/* 
-   MODELO USER (timestamps)
-*/
+/* MODELO USER (timestamps) */
 const userSchema = new mongoose.Schema(
   {
     nombre: { type: String, required: true },
@@ -109,16 +103,13 @@ function requireRole(...roles) {
   };
 }
 
-/* 
-   RUTA DEFAULT*/
+/* RUTA DEFAULT*/
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "index.html"));
 });
 
-/*
-   AUTH
-*/
+/* AUTH */
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -185,10 +176,7 @@ app.post("/api/auth/logout", (req, res) => {
 });
 
 
-/*
-   CONTACTO (guardar mensaje)
-   - Público: cualquiera puede enviar
-*/
+/* CONTACTO (guardar mensaje) */
 app.post("/api/contact", async (req, res) => {
   try {
     const nombre = String(req.body.nombre || "").trim();
@@ -208,9 +196,7 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-/*
-   MENSAJES (leer mensajes para Jessica/Admin)
-*/
+/* MENSAJES (leer mensajes para Jessica/Admin) */
 app.get("/api/messages", requireRole("JESSICA", "ADMIN"), async (req, res) => {
   try {
     const messages = await Message.find({}).sort({ createdAt: -1 });
@@ -222,15 +208,15 @@ app.get("/api/messages", requireRole("JESSICA", "ADMIN"), async (req, res) => {
 });
 
 
-/* MODELO SETTINGS (ajustes del sitio)- Un único documento */
+/* MODELO SETTINGS (ajustes del sitio)*/
 const settingsSchema = new mongoose.Schema(
   {
-    telefonoWhatsApp: { type: String, default: "" }, // ejemplo: 34687350990
-    instagram: { type: String, default: "" },        // ejemplo: clickartephotography
-    ubicacion: { type: String, default: "" },        // "Almagro / Ciudad Real"
-    especialidades: { type: String, default: "" },   // "Newborn · Embarazo · Infantil"
-    emailContacto: { type: String, default: "" },    // email visible en la web
-    avisoWeb: { type: String, default: "" },         // texto opcional tipo “Agenda completa…”
+    telefonoWhatsApp: { type: String, default: "" }, 
+    instagram: { type: String, default: "" },        
+    ubicacion: { type: String, default: "" },        
+    especialidades: { type: String, default: "" },   
+    emailContacto: { type: String, default: "" },    
+    avisoWeb: { type: String, default: "" },        
   },
   { collection: "settings", timestamps: true }
 );
@@ -271,9 +257,7 @@ app.put("/api/settings", requireRole("JESSICA", "ADMIN"), async (req, res) => {
     return res.status(500).json({ error: "Error interno" });
   }
 });
-/*
-   ADMIN PANEL
-*/
+/* ADMIN PANEL */
 app.get("/api/admin/users", requireRole("ADMIN"), async (req, res) => {
   const users = await User.find({}, { password: 0 }).sort({ createdAt: -1 });
   res.json({ users });
@@ -283,9 +267,7 @@ app.get("/api/panel", requireRole("JESSICA", "ADMIN"), (req, res) => {
   res.json({ ok: true, msg: "Panel autorizado" });
 });
 
-/* 
-   ERROR 
-*/
+/*  ERROR*/
 app.use((err, req, res, next) => {
   console.error(" SERVER ERROR:", err);
   res.status(500).json({ error: err.message || "Error interno" });

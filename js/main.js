@@ -1,6 +1,5 @@
 // ========= SETTINGS -> CONTACTO =========
 async function loadSiteSettingsIntoContact() {
-  // Solo ejecutar si estamos en contacto.html (porque existe el form)
   const contactForm = document.getElementById("contactForm");
   if (!contactForm) return;
 
@@ -9,7 +8,7 @@ async function loadSiteSettingsIntoContact() {
     const data = await res.json().catch(() => ({}));
     const s = data.settings || null;
 
-    if (!s) return; // si aún no hay settings guardados, no pasa nada
+    if (!s) return; 
 
     // Especialidades
     const esp = document.getElementById("contactEspecialidades");
@@ -37,7 +36,7 @@ async function loadSiteSettingsIntoContact() {
       }
     }
 
-    // Aviso web (opcional)
+    // Aviso web 
     const aviso = document.getElementById("contactAviso");
     if (aviso) {
       if (s.avisoWeb) {

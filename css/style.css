@@ -111,9 +111,7 @@ nav a.active::after{ width: 100%; }
   }
 }
 
-/* 
-   SECCIONES BASE
- */
+/*SECCIONES BASE*/
 .section{
   padding: 90px 20px;
 }
@@ -282,7 +280,7 @@ nav a.active::after{ width: 100%; }
 }
 
 /* 
-   SERVICIOS (si lo usas)
+   SERVICIOS 
  */
 .servicios-list{
   display: flex;
@@ -297,9 +295,7 @@ nav a.active::after{ width: 100%; }
   padding-left: 15px;
 }
 
-/* 
-   FORMULARIO + MENSAJE
- */
+/* FORMULARIO + MENSAJE*/
 form{
   max-width: 520px;
   display: flex;
@@ -344,9 +340,7 @@ button:hover{
 #formMessage.error{ color: #b00020; }
 #formMessage.success{ color: #2f8f4a; }
 
-/* 
-   SOBRE MÍ - HERO + CONTENIDO
- */
+/* SOBRE MÍ - HERO + CONTENIDO */
 .hero-sobre-mi{
   height: 55vh;
   background: linear-gradient(270deg, #f5e6d3, #ffffff, #f0e4d8);
@@ -441,9 +435,7 @@ button:hover{
   color: var(--marron);
 }
 
-/* 
-   FOOTER
- */
+/* FOOTER */
 footer{
   text-align: center;
   padding: 22px 16px;
@@ -451,9 +443,8 @@ footer{
   font-size: 14px;
   color: var(--marron-2);
 }
-/* 
-   SERVICIOS - TARJETAS
- */
+/* SERVICIOS - TARJETAS */
+
 .servicios-grid{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -531,9 +522,7 @@ footer{
   border-color: rgba(212,175,55,0.45);
 }
 
-/* 
-   LIGHTBOX
- */
+/* LIGHTBOX */
 .lightbox{
   position: fixed;
   inset: 0;
@@ -570,9 +559,7 @@ footer{
   font-size: 28px;
   line-height: 1;
 }
-/* 
-   CONTACTO
- */
+/* CONTACTO */
 .contacto-grid{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -640,8 +627,7 @@ footer{
     grid-template-columns: 1fr;
   }
 }
-/* 
-   AUTH (login / registro) */
+/*  AUTH (login / registro) */
 .auth-card{
   max-width: 520px;
   margin: 0 auto;

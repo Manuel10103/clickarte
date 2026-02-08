@@ -17,7 +17,7 @@ async function loadMessages() {
   const list = document.getElementById("messagesList");
   const msg = document.getElementById("messagesMsg");
 
-  if (!list) return; // por si estás en otra página
+  if (!list) return; 
 
   try {
     if (msg) msg.textContent = "Cargando mensajes...";
